@@ -1,0 +1,27 @@
+version: "3.13.1"
+services:
+  flask:
+    build: ./flask
+    container_name: flask
+    restart: always
+    environment:
+      - APP-NAME=MyFlaskApp
+    expose:
+      - 8080  # Expose internally to other services
+    networks:
+      - mynetwork  # Ensure that both services are on the same network
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"  # Expose Nginx port to the host
+    depends_on:
+      - flask
+    networks:
+      - mynetwork  # Ensure that both services are on the same network
+
+networks:
+  mynetwork:  # Define a custom network
+    driver: bridge
